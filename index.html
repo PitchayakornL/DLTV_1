@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กรอบแนวคิดการวิจัย CIPP Model</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header h2 {
+            font-size: 1.3em;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 40px;
+        }
+        
+        .cipp-framework {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .cipp-box {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 6px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            min-height: 400px;
+            cursor: pointer;
+        }
+        
+        .cipp-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .cipp-box.active {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .context {
+            border-left-color: #FF6B6B;
+            background: linear-gradient(135deg, #ffefef 0%, #fff5f5 100%);
+        }
+        
+        .input {
+            border-left-color: #4ECDC4;
+            background: linear-gradient(135deg, #f0fffe 0%, #f7ffff 100%);
+        }
+        
+        .process {
+            border-left-color: #45B7D1;
+            background: linear-gradient(135deg, #f0f9ff 0%, #f7fbff 100%);
+        }
+        
+        .product {
+            border-left-color: #96CEB4;
+            background: linear-gradient(135deg, #f0fff4 0%, #f7fffa 100%);
+        }
+        
+        .cipp-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cipp-title .icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .context .icon { background: #FF6B6B; }
+        .input .icon { background: #4ECDC4; }
+        .process .icon { background: #45B7D1; }
+        .product .icon { background: #96CEB4; }
+        
+        .cipp-subtitle {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+        
+        .cipp-items {
+            list-style: none;
+        }
+        
+        .cipp-items li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.95em;
+            position: relative;
+            padding-left: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .cipp-items li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .cipp-items li:last-child {
+            border-bottom: none;
+        }
+        
+        .cipp-items li:hover {
+            background: rgba(0,0,0,0.05);
+            padding-left: 25px;
+        }
+        
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .connection-line {
+            position: absolute;
+            background: #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .connection-horizontal {
+            height: 2px;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            transform: translateY(-50%);
+        }
+        
+        .connection-vertical {
+            width: 2px;
+            left: 50%;
+            top: 50%;
+            height: 30px;
+            transform: translateX(-50%);
+        }
+        
+        .summary-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .summary-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .summary-content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #555;
+            text-align: center;
+        }
+        
+        .interactive-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .cipp-framework {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .interactive-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>กรอบแนวคิดการวิจัย CIPP Model</h1>
+            <h2>Context • Input • Process • Product</h2>
+        </div>
+        
+        <div class="main-content">
+            <div class="cipp-framework">
+                <div class="connections">
+                    <div class="connection-line connection-horizontal" style="top: 25%; left: 50%;"></div>
+                    <div class="connection-line connection-horizontal" style="top: 75%; left: 50%;"></div>
+                    <div class="connection-line connection-vertical" style="left: 25%; top: 50%;"></div>
+                    <div class="connection-line connection-vertical" style="left: 75%; top: 50%;"></div>
+                </div>
+                
+                <div class="cipp-box context" onclick="showDetails('context')">
+                    <div class="cipp-title">
+                        <div class="icon">C</div>
+                        Context (บริบท)
+                    </div>
+                    <div class="cipp-subtitle">การประเมินสภาพแวดล้อมและบริบท</div>
+                    <ul class="cipp-items">
+                        <li>วิเคราะห์สภาพปัญหาและความต้องการ</li>
+                        <li>ศึกษาสภาพแวดล้อมทางสังคม เศรษฐกิจ การเมือง</li>
+                        <li>ทบทวนนโยบายและกฎระเบียบที่เกี่ยวข้อง</li>
+                        <li>ประเมินทรัพยากรและข้อจำกัด</li>
+                        <li>กำหนดเป้าหมายและวัตถุประสงค์</li>
+                        <li>วิเคราะห์ผู้มีส่วนได้ส่วนเสีย</li>
+                    </ul>
+                </div>
+                
+                <div class="cipp-box input" onclick="showDetails('input')">
+                    <div class="cipp-title">
+                        <div class="icon">I</div>
+                        Input (ปัจจัยนำเข้า)
+                    </div>
+                    <div class="cipp-subtitle">การประเมินทรัพยากรและปัจจัยที่จำเป็น</div>
+                    <ul class="cipp-items">
+                        <li>ทรัพยากรบุคคล (บุคลากร ผู้เชี่ยวชาญ)</li>
+                        <li>งบประมาณและแหล่งเงินทุน</li>
+                        <li>เทคโนลยีและอุปกรณ์</li>
+                        <li>หลักสูตรและเนื้อหา</li>
+                        <li>เวลาและกำหนดการ</li>
+                        <li>สถานที่และสิ่งอำนวยความสะดวก</li>
+                    </ul>
+                </div>
+                
+                <div class="cipp-box process" onclick="showDetails('process')">
+                    <div class="cipp-title">
+                        <div class="icon">P</div>
+                        Process (กระบวนการ)
+                    </div>
+                    <div class="cipp-subtitle">การประเมินการดำเนินงานและกิจกรรม</div>
+                    <ul class="cipp-items">
+                        <li>การวางแผนและการจัดการโครงการ</li>
+                        <li>การดำเนินกิจกรรมตามแผน</li>
+                        <li>การติดตามและควบคุมคุณภาพ</li>
+                        <li>การแก้ไขปัญหาและปรับปรุง</li>
+                        <li>การสื่อสารและประสานงาน</li>
+                        <li>การมีส่วนร่วมของผู้เกี่ยวข้อง</li>
+                    </ul>
+                </div>
+                
+                <div class="cipp-box product" onclick="showDetails('product')">
+                    <div class="cipp-title">
+                        <div class="icon">P</div>
+                        Product (ผลผลิต)
+                    </div>
+                    <div class="cipp-subtitle">การประเมินผลลัพธ์และผลกระทบ</div>
+                    <ul class="cipp-items">
+                        <li>ผลสัมฤทธิ์ตามวัตถุประสงค์</li>
+                        <li>ความพึงพอใจของผู้รับบริการ</li>
+                        <li>การเปลี่ยนแปลงพฤติกรรมและทัศนคติ</li>
+                        <li>ผลกระทบระยะสั้นและระยะยาว</li>
+                        <li>ประสิทธิภาพและประสิทธิผล</li>
+                        <li>ความยั่งยืนของโครงการ</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <div class="summary-title">แนวคิด CIPP Model</div>
+                <div class="summary-content">
+                    แบบจำลอง CIPP เป็นกรอบการประเมินที่ครอบคลุมทั้ง 4 มิติ ช่วยให้การวิจัยและการประเมินโครงการมีความสมบูรณ์และเป็นระบบ 
+                    โดยเริ่มจากการวิเคราะห์บริบท การเตรียมปัจจัยนำเข้า การติดตามกระบวนการ และการประเมินผลผลิต 
+                    เพื่อให้ได้ข้อมูลที่ครอบคลุมสำหรับการตัดสินใจและการปรับปรุงอย่างต่อเนื่อง
+                </div>
+                
+                <div class="interactive-buttons">
+                    <button class="btn btn-primary" onclick="showExample()">ดูตัวอย่างการใช้งาน</button>
+                    <button class="btn btn-secondary" onclick="showGuide()">คู่มือการประยุกต์ใช้</button>
+                    <button class="btn btn-secondary" onclick="resetHighlight()">รีเซ็ตการแสดงผล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for detailed information -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        const detailsData = {
+            context: {
+                title: "Context (บริบท) - การประเมินสภาพแวดล้อม",
+                content: `
+                    <h3>วัตถุประสงค์:</h3>
+                    <p>เพื่อทำความเข้าใจสภาพแวดล้อมและบริบทที่โครงการจะดำเนินการ</p>
+                    
+                    <h3>คำถามสำคัญ:</h3>
+                    <ul>
+                        <li>ปัญหาหรือความต้องการที่แท้จริงคืออะไร?</li>
+                        <li>สภาพแวดล้อมเป็นอย่างไร?</li>
+                        <li>มีข้อจำกัดหรืออุปสรรคอะไรบ้าง?</li>
+                        <li>ใครคือผู้มีส่วนได้ส่วนเสีย?</li>
+                    </ul>
+                    
+                    <h3>เครื่องมือที่ใช้:</h3>
+                    <p>การสำรวจ, การสัมภาษณ์, การวิเคราะห์เอกสาร, SWOT Analysis</p>
+                `
+            },
+            input: {
+                title: "Input (ปัจจัยนำเข้า) - การประเมินทรัพยากร",
+                content: `
+                    <h3>วัตถุประสงค์:</h3>
+                    <p>เพื่อประเมินความพร้อมของทรัพยากรและปัจจัยที่จำเป็นสำหรับการดำเนินโครงการ</p>
+                    
+                    <h3>คำถามสำคัญ:</h3>
+                    <ul>
+                        <li>มีทรัพยากรเพียงพอหรือไม่?</li>
+                        <li>บุคลากรมีความรู้ความสามารถเหมาะสมหรือไม่?</li>
+                        <li>งบประมาณเพียงพอหรือไม่?</li>
+                        <li>เทคโนลยีและอุปกรณ์พร้อมใช้งานหรือไม่?</li>
+                    </ul>
+                    
+                    <h3>เครื่องมือที่ใช้:</h3>
+                    <p>แบบประเมินความพร้อม, การตรวจสอบทรัพยากร, การวิเคราะห์ต้นทุน-ผลประโยชน์</p>
+                `
+            },
+            process: {
+                title: "Process (กระบวนการ) - การประเมินการดำเนินงาน",
+                content: `
+                    <h3>วัตถุประสงค์:</h3>
+                    <p>เพื่อติดตามและประเมินการดำเนินงานตามแผนที่กำหนดไว้</p>
+                    
+                    <h3>คำถามสำคัญ:</h3>
+                    <ul>
+                        <li>การดำเนินงานเป็นไปตามแผนหรือไม่?</li>
+                        <li>มีปัญหาหรืออุปสรรคอะไรบ้าง?</li>
+                        <li>ผู้เข้าร่วมมีส่วนร่วมอย่างไร?</li>
+                        <li>ต้องปรับปรุงอะไรบ้าง?</li>
+                    </ul>
+                    
+                    <h3>เครื่องมือที่ใช้:</h3>
+                    <p>การสังเกต, บันทึกการดำเนินงาน, แบบสอบถามความคิดเห็น, การสัมภาษณ์</p>
+                `
+            },
+            product: {
+                title: "Product (ผลผลิต) - การประเมินผลลัพธ์",
+                content: `
+                    <h3>วัตถุประสงค์:</h3>
+                    <p>เพื่อประเมินผลสัมฤทธิ์และผลกระทบของโครงการ</p>
+                    
+                    <h3>คำถามสำคัญ:</h3>
+                    <ul>
+                        <li>บรรลุวัตถุประสงค์หรือไม่?</li>
+                        <li>ผู้รับบริการพึงพอใจหรือไม่?</li>
+                        <li>มีผลกระทบอะไรบ้าง?</li>
+                        <li>โครงการมีความยั่งยืนหรือไม่?</li>
+                    </ul>
+                    
+                    <h3>เครื่องมือที่ใช้:</h3>
+                    <p>แบบทดสอบ, แบบประเมินความพึงพอใจ, การติดตามผล, การวิเคราะห์ผลกระทบ</p>
+                `
+            }
+        };
+        
+        function showDetails(type) {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            const data = detailsData[type];
+            
+            content.innerHTML = `
+                <h2>${data.title}</h2>
+                ${data.content}
+            `;
+            
+            modal.style.display = 'flex';
+            
+            // Highlight the selected box
+            document.querySelectorAll('.cipp-box').forEach(box => {
+                box.classList.remove('active');
+            });
+            document.querySelector(`.${type}`).classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+        
+        function showExample() {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <h2>ตัวอย่างการใช้งาน CIPP Model</h2>
+                <h3>การประเมินโครงการพัฒนาเทคโนโลยีดิจิทัลเพื่อการบริหารจัดการและการจัดการศึกษา</h3>
+                
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #FF6B6B;">Context:</h4>
+                    <p>วิเคราะห์ปัญหาการบริหารจัดการสถานศึกษาแบบดั้งเดิม, ศึกษาความต้องการระบบดิจิทัลของผู้บริหาร ครู และเจ้าหน้าที่, ทบทวนนโยบายการศึกษา 4.0 และการปฏิรูปการศึกษา</p>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #4ECDC4;">Input:</h4>
+                    <p>ประเมินความพร้อมของบุคลากรด้านเทคโนโลยี, งบประมาณสำหรับระบบดิจิทัล, โครงสร้างพื้นฐานด้าน IT, ซอฟต์แวร์จัดการสถานศึกษา, ระบบฐานข้อมูล</p>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #45B7D1;">Process:</h4>
+                    <p>ติดตามการพัฒนาระบบ, การอบรมผู้ใช้งาน, การทดสอบระบบ, การแก้ไขปัญหาเทคนิค, การประสานงานระหว่างหน่วยงาน, การปรับปรุงระบบตามข้อเสนอแนะ</p>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #96CEB4;">Product:</h4>
+                    <p>ประเมินประสิทธิภาพการบริหารจัดการ, ความพึงพอใจของผู้ใช้งาน, การลดเวลาและต้นทุนในการดำเนินงาน, ความแม่นยำของข้อมูล, การเข้าถึงข้อมูลแบบเรียลไทม์</p>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+        
+        function showGuide() {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <h2>คู่มือการประยุกต์ใช้ CIPP Model</h2>
+                
+                <h3>ขั้นตอนการดำเนินการ:</h3>
+                <ol style="line-height: 1.8;">
+                    <li><strong>เริ่มต้นด้วย Context:</strong> วิเคราะห์ปัญหาและกำหนดเป้าหมาย</li>
+                    <li><strong>ประเมิน Input:</strong> ตรวจสอบความพร้อมของทรัพยากร</li>
+                    <li><strong>ติดตาม Process:</strong> สังเกตและปรับปรุงการดำเนินงาน</li>
+                    <li><strong>วัดผล Product:</strong> ประเมินผลสัมฤทธิ์และผลกระทบ</li>
+                </ol>
+                
+                <h3>ข้อควรระวัง:</h3>
+                <ul style="line-height: 1.8;">
+                    <li>ทั้ง 4 มิติต้องดำเนินการอย่างต่อเนื่องและเชื่อมโยงกัน</li>
+                    <li>ใช้เครื่องมือที่หลากหลายในการเก็บข้อมูล</li>
+                    <li>เปิดโอกาสให้ผู้มีส่วนได้ส่วนเสียมีส่วนร่วม</li>
+                    <li>นำผลการประเมินไปปรับปรุงอย่างต่อเนื่อง</li>
+                </ul>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+        
+        function resetHighlight() {
+            document.querySelectorAll('.cipp-box').forEach(box => {
+                box.classList.remove('active');
+            });
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Add keyboard support
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fe6c3267f17dc8',t:'MTc1ODAwNTM1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
